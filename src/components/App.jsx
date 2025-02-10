@@ -1,17 +1,11 @@
 // import axios from 'axios'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
-import axios from 'axios';
 import SearchBar from './SearchBar/SearchBar';
+import ImageGallery from './ImageGallery/ImageGallery';
+import { fetchArticles } from '../services/api';
 
-let page = 1;
-const YOUR_ACCESS_KEY = 'Hg1CpLsou6vsLxEalGGcMeVDU3n-0eTBhr2sOtrVw94';
-const params = new URLSearchParams({
-  client_id: YOUR_ACCESS_KEY,
-  query: `cat`,
-  page,
-  per_page: 15,
-});
+
 
 // const API_KEY = '47413156-c8c9abea8f6d88937b7892740';
 // const params = new URLSearchParams({
@@ -24,9 +18,31 @@ const params = new URLSearchParams({
 // });
 
 function App() {
+  const [articles, setArticles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
+
   useEffect(() => {
-    axios.get(`https://api.unsplash.com/photos/?${params}`);
-  }, []);
+  //   axios
+  //     .get(`https://api.unsplash.com/photos/?${params}`)
+  //     .then(res => setArticles(res.data));
+ 
+  
+  const getData = async () => {
+    try {
+      setIsLoading(true)
+      setIsError(false)
+      const data = await fetchArticles ()
+      setArticles(data); 
+    }
+    catch (error) {
+      setIsError(true)
+    }
+    finally {setIsLoading(false)}
+    // console.log(response);
+  };
+  getData()
+}, []);
 
   //  useEffect (()=> {
   //   axios.get(`https://pixabay.com/api/?${params}`)
@@ -35,7 +51,10 @@ function App() {
   return (
     <>
       <h1>goit-react-hw-04</h1>
-      <SearchBar/>
+      <SearchBar />
+      <ImageGallery articles={articles} />
+      {isLoading && <h2>Loading...</h2>}
+      {isError && <h2>Error...</h2>}
     </>
   );
 }

@@ -1,7 +1,7 @@
 body {
   font-family: sans-serif;
   line-height: 1.5;
-  background-color: rgb(220, 214, 157);
+  background-color: rgb(157, 188, 220);
 }
 
 h1,
@@ -24,4 +24,5 @@ ol {
 img {
   display: block;
   max-width: 100%;
+  height: auto;
 }
