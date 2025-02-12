@@ -1,7 +1,7 @@
 body {
   font-family: sans-serif;
   line-height: 1.5;
-  background-color: rgb(158, 119, 131);
+  background-color: rgb(161, 232, 167);
 }
 
 h1,
@@ -25,4 +25,8 @@ img {
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+.title {
+  color: rgb(15, 128, 56);
 }

@@ -1,4 +1,5 @@
 .forma {
+  position: relative;
     background-color: rgb(102, 122, 122);
     height: 50px;
     max-width: 1440px;
@@ -33,3 +34,6 @@ border: none;
     transform: scale(1.1);
   }
   
+
+
+
