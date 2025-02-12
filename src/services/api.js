@@ -12,8 +12,9 @@ export const fetchArticles = async (query, page) => {
   });
   const response = await axios.get(
     // `https://api.unsplash.com/search/photos?client_id=${YOUR_ACCESS_KEY}&page=1&query=${query}`
-    `https://api.unsplash.com/search/photos?${params} ` 
+    `https://api.unsplash.com/search/photos1?${params} ` 
   );
-  // console.log(response.data.results);
-  return response.data.results;
+  // console.log(response.data);
+  // console.log(response.data.total_pages);
+  return response.data
 };

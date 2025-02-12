@@ -5,6 +5,7 @@ import SearchBar from './SearchBar/SearchBar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import { fetchArticles } from '../services/api';
 import LoadMoreBtn from './LoadMoreBtn/LoadMoreBtn';
+import toast from 'react-hot-toast';
 
 // const API_KEY = '47413156-c8c9abea8f6d88937b7892740';
 // const params = new URLSearchParams({
@@ -23,12 +24,13 @@ function App() {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
 
-// console.log(articles);
-// console.log(query);
+  // console.log(articles);
+  // console.log(query);
 
   useEffect(() => {
     if (query === '') {
-      return
+      
+      return;
     }
     //   axios
     //     .get(`https://api.unsplash.com/photos/?${params}`)
@@ -37,9 +39,23 @@ function App() {
       try {
         setIsLoading(true);
         setIsError(false);
-        const data = await fetchArticles(query, page);
-        setArticles(prev => [...prev, ...data] );
+        const {results, total_pages} = await fetchArticles(query, page);
+        toast(`Ти знайшов ${query}`)
+        console.log(results);
+        console.log(total_pages);
+        setArticles(prev => [...prev, ...results]);
       } catch (error) {
+        toast.error(`download error ${error}`,
+          {
+                       style: {
+              borderRadius: '10px',
+              background: "red",
+              color: '#fff',
+            },
+          }
+
+
+        )
         setIsError(true);
       } finally {
         setIsLoading(false);
@@ -48,25 +64,31 @@ function App() {
     };
     getData();
   }, [query, page]);
+  
 
   //  useEffect (()=> {
   //   axios.get(`https://pixabay.com/api/?${params}`)
   //  }, [])
   const handleSetQuery = newQuery => {
     // console.log(newQuery);
-    setQuery(newQuery)
-    setArticles([])
-    setPage(1)
+    setQuery(newQuery);
+    setArticles([]);
+    setPage(1);
   };
+
+  const changeloadMore = () => {
+    setPage(prev => prev + 1)
+  }
 
   return (
     <>
-      <h1 className='title'>goit-react-hw-04</h1>
-      <SearchBar handleSetQuery={handleSetQuery}/>
+      <h1 className="title">goit-react-hw-04</h1>
+      <SearchBar handleSetQuery={handleSetQuery} />
       <ImageGallery articles={articles} />
       {isLoading && <h2>Loading...</h2>}
       {isError && <h2>Error...</h2>}
-      <button onClick={()=> setPage(prev => prev +1 )} >Load more </button>
+<LoadMoreBtn changeloadMore={changeloadMore}/>
+      {/* <button onClick={() => setPage(prev => prev + 1)}>Load more </button> */}
       {/* <LoadMoreBtn onClick={()=> setPage(prev => prev +1 )}/> */}
     </>
   );
