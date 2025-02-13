@@ -6,11 +6,13 @@ const SearchBar = ({handleSetQuery}) => {
   const handleSubmit = e => {
     e.preventDefault();
     handleSetQuery(value);
+    setValue('')
+    
   };
   return (
     <header>
       <form onSubmit={handleSubmit} className={css.forma}>
-        <input
+        <input name='search'
           onChange={e => {
             setValue(e.target.value);
           }}

@@ -6,6 +6,8 @@ import ImageGallery from './ImageGallery/ImageGallery';
 import { fetchArticles } from '../services/api';
 import LoadMoreBtn from './LoadMoreBtn/LoadMoreBtn';
 import toast from 'react-hot-toast';
+import ErrorMessage from './ErrorMessage/ErrorMessage';
+import Loader from './Loader/Loader';
 
 // const API_KEY = '47413156-c8c9abea8f6d88937b7892740';
 // const params = new URLSearchParams({
@@ -23,6 +25,10 @@ function App() {
   const [isError, setIsError] = useState(false);
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
+  const [totalPage, setTotalPages] = useState(0);
+
+// setTotalPages(total_pages)
+// console.log(totalPage);
 
   // console.log(articles);
   // console.log(query);
@@ -41,21 +47,23 @@ function App() {
         setIsError(false);
         const {results, total_pages} = await fetchArticles(query, page);
         toast(`Ти знайшов ${query}`)
-        console.log(results);
-        console.log(total_pages);
+        // console.log(results);
+        setTotalPages(total_pages)
+        // console.log(total_pages);
         setArticles(prev => [...prev, ...results]);
-      } catch (error) {
-        toast.error(`download error ${error}`,
-          {
-                       style: {
-              borderRadius: '10px',
-              background: "red",
-              color: '#fff',
-            },
-          }
-
-
-        )
+      } catch (error) { console.log(error.message);
+      
+        // toast.error(`download error ${error.message}`,
+        //   {
+        //     style: {
+        //       borderRadius: '10px',
+        //       background: "red",
+        //       color: '#fff',
+        //     },
+        //   }
+          
+          
+        // )
         setIsError(true);
       } finally {
         setIsLoading(false);
@@ -65,7 +73,8 @@ function App() {
     getData();
   }, [query, page]);
   
-
+  
+  // console.log(page);
   //  useEffect (()=> {
   //   axios.get(`https://pixabay.com/api/?${params}`)
   //  }, [])
@@ -86,8 +95,9 @@ function App() {
       <SearchBar handleSetQuery={handleSetQuery} />
       <ImageGallery articles={articles} />
       {isLoading && <h2>Loading...</h2>}
-      {isError && <h2>Error...</h2>}
-<LoadMoreBtn changeloadMore={changeloadMore}/>
+      {isLoading && <Loader/>}
+      {isError && <ErrorMessage/>}
+{page < totalPage &&   <LoadMoreBtn changeloadMore={changeloadMore}/>}
       {/* <button onClick={() => setPage(prev => prev + 1)}>Load more </button> */}
       {/* <LoadMoreBtn onClick={()=> setPage(prev => prev +1 )}/> */}
     </>
