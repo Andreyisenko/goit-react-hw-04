@@ -1,18 +1,15 @@
-// import { FaSearch } from 'react-icons/fa';
 import { useState } from 'react';
 import css from './SearchBar.module.css';
 import toast from 'react-hot-toast';
 const SearchBar = ({ handleSetQuery }) => {
   const [value, setValue] = useState('');
   const handleSubmit = e => {
-    // console.log(value);
     if (value.trim() === '') {
       toast(`
 text must be entered to search for images`);
     }
     e.preventDefault();
     handleSetQuery(value);
-    // setValue('')
   };
   return (
     <header>

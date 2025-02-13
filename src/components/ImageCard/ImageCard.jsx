@@ -1,19 +1,17 @@
-
-import css from './ImageCard.module.css'
-const ImageCard = ({article}) => {
-  console.log(article.user.name);
-  console.log(article.urls.regular);
-  
+import css from './ImageCard.module.css';
+const ImageCard = ({ article, openModal }) => {
   return (
     <div className={css.wraper}>
-  <img  className={css.imgE} src={article.urls.small} alt={article.alt_description} />
-  <p className={css.text}>Autor: {article.user.name}</p>
-  <p className={css.text}>Likes: {article.likes}</p>
-console.log();
+      <img
+        className={css.imgE}
+        src={article.urls.small}
+        alt={article.alt_description}
+        onClick={() => openModal(article.urls.regular, article.alt_description)}
+      />
+      <p className={css.text}>Autor: {article.user.name}</p>
+      <p className={css.text}>Likes: {article.likes}</p>
+    </div>
+  );
+};
 
-</div>
-
-  )
-}
-
-export default ImageCard
+export default ImageCard;

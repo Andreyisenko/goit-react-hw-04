@@ -1,4 +1,3 @@
-// import axios from 'axios'
 import { useEffect, useState } from 'react';
 import './App.css';
 import SearchBar from './SearchBar/SearchBar';
@@ -10,16 +9,6 @@ import ErrorMessage from './ErrorMessage/ErrorMessage';
 import Loader from './Loader/Loader';
 import ImageModal from './ImageModal/ImageModal';
 
-// const API_KEY = '47413156-c8c9abea8f6d88937b7892740';
-// const params = new URLSearchParams({
-//   key: API_KEY,
-
-//   q: `pig`,
-//   image_type: 'photo',
-//   orientation: 'horizontal',
-//   safesearch: 'true',
-// });
-
 function App() {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,20 +16,14 @@ function App() {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPages] = useState(0);
-
-  // setTotalPages(total_pages)
-  // console.log(totalPage);
-
-  // console.log(articles);
-  // console.log(query);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalSrc, setModalSrc] = useState('');
+  const [modalAlt, setModalAlt] = useState('');
 
   useEffect(() => {
     if (query === '') {
       return;
     }
-    //   axios
-    //     .get(`https://api.unsplash.com/photos/?${params}`)
-    //     .then(res => setArticles(res.data));
     const getData = async () => {
       try {
         setIsLoading(true);
@@ -51,9 +34,9 @@ function App() {
           toast(`no results found, try again`);
         }
         setTotalPages(total_pages);
-        // console.log(total_pages);
         setArticles(prev => [...prev, ...results]);
       } catch (error) {
+        setIsError(error.message);
         toast.error(
           `download error ${error.message}`,
 
@@ -66,21 +49,14 @@ function App() {
           }
         );
         setIsError(true);
-        // toast.error(error.message);
       } finally {
         setIsLoading(false);
       }
-      // console.log(response);
     };
     getData();
   }, [query, page]);
 
-  // console.log(page);
-  //  useEffect (()=> {
-  //   axios.get(`https://pixabay.com/api/?${params}`)
-  //  }, [])
   const handleSetQuery = newQuery => {
-    // console.log(newQuery);
     setQuery(newQuery);
     setArticles([]);
     setPage(1);
@@ -89,19 +65,31 @@ function App() {
   const changeloadMore = () => {
     setPage(prev => prev + 1);
   };
-
+  const openModal = (src, alt) => {
+    setModalIsOpen(true);
+    setModalSrc(src);
+    setModalAlt(alt);
+  };
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setModalSrc(null);
+    setModalAlt('');
+  };
   return (
     <>
       <h1 className="title">goit-react-hw-04</h1>
       <SearchBar handleSetQuery={handleSetQuery} />
-      <ImageGallery articles={articles} />
+      <ImageGallery articles={articles} openModal={openModal} />
       {isLoading && <h2>Loading...</h2>}
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
       {page < totalPage && <LoadMoreBtn changeloadMore={changeloadMore} />}
-      {/* <button onClick={() => setPage(prev => prev + 1)}>Load more </button> */}
-      {/* <LoadMoreBtn onClick={()=> setPage(prev => prev +1 )}/> */}
-      <ImageModal/>
+      <ImageModal
+        modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
+        src={modalSrc}
+        alt={modalAlt}
+      />
     </>
   );
 }
