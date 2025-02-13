@@ -30,7 +30,6 @@ function App() {
         setIsError(false);
         const { results, total_pages } = await fetchArticles(query, page);
         if (results.length === 0) {
-          console.log(results.length);
           toast(`no results found, try again`);
         }
         setTotalPages(total_pages);
