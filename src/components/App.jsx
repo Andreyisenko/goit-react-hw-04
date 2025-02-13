@@ -8,6 +8,7 @@ import LoadMoreBtn from './LoadMoreBtn/LoadMoreBtn';
 import toast from 'react-hot-toast';
 import ErrorMessage from './ErrorMessage/ErrorMessage';
 import Loader from './Loader/Loader';
+import ImageModal from './ImageModal/ImageModal';
 
 // const API_KEY = '47413156-c8c9abea8f6d88937b7892740';
 // const params = new URLSearchParams({
@@ -27,15 +28,14 @@ function App() {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPages] = useState(0);
 
-// setTotalPages(total_pages)
-// console.log(totalPage);
+  // setTotalPages(total_pages)
+  // console.log(totalPage);
 
   // console.log(articles);
   // console.log(query);
 
   useEffect(() => {
     if (query === '') {
-      
       return;
     }
     //   axios
@@ -45,26 +45,28 @@ function App() {
       try {
         setIsLoading(true);
         setIsError(false);
-        const {results, total_pages} = await fetchArticles(query, page);
-        toast(`Ти знайшов ${query}`)
-        // console.log(results);
-        setTotalPages(total_pages)
+        const { results, total_pages } = await fetchArticles(query, page);
+        if (results.length === 0) {
+          console.log(results.length);
+          toast(`no results found, try again`);
+        }
+        setTotalPages(total_pages);
         // console.log(total_pages);
         setArticles(prev => [...prev, ...results]);
-      } catch (error) { console.log(error.message);
-      
-        // toast.error(`download error ${error.message}`,
-        //   {
-        //     style: {
-        //       borderRadius: '10px',
-        //       background: "red",
-        //       color: '#fff',
-        //     },
-        //   }
-          
-          
-        // )
+      } catch (error) {
+        toast.error(
+          `download error ${error.message}`,
+
+          {
+            style: {
+              borderRadius: '10px',
+              background: 'red',
+              color: '#fff',
+            },
+          }
+        );
         setIsError(true);
+        // toast.error(error.message);
       } finally {
         setIsLoading(false);
       }
@@ -72,8 +74,7 @@ function App() {
     };
     getData();
   }, [query, page]);
-  
-  
+
   // console.log(page);
   //  useEffect (()=> {
   //   axios.get(`https://pixabay.com/api/?${params}`)
@@ -86,8 +87,8 @@ function App() {
   };
 
   const changeloadMore = () => {
-    setPage(prev => prev + 1)
-  }
+    setPage(prev => prev + 1);
+  };
 
   return (
     <>
@@ -95,11 +96,12 @@ function App() {
       <SearchBar handleSetQuery={handleSetQuery} />
       <ImageGallery articles={articles} />
       {isLoading && <h2>Loading...</h2>}
-      {isLoading && <Loader/>}
-      {isError && <ErrorMessage/>}
-{page < totalPage &&   <LoadMoreBtn changeloadMore={changeloadMore}/>}
+      {isLoading && <Loader />}
+      {isError && <ErrorMessage />}
+      {page < totalPage && <LoadMoreBtn changeloadMore={changeloadMore} />}
       {/* <button onClick={() => setPage(prev => prev + 1)}>Load more </button> */}
       {/* <LoadMoreBtn onClick={()=> setPage(prev => prev +1 )}/> */}
+      <ImageModal/>
     </>
   );
 }
